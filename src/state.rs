@@ -4,8 +4,8 @@ use crate::MESSAGE;
 
 #[repr(C)]
 #[derive(Clone, Copy)]
-pub struct Config {
-    pub magic: [u8; 6],
+pub struct Oracle {
+    pub problem: [u8; 6],
     pub tag: u8,
     pub chime_count: u8,
     pub genesis_seed: [u8; 32],
@@ -13,8 +13,8 @@ pub struct Config {
     pub genesis_slot: [u8; 8],
     pub message: [u8; MESSAGE.len()],
 }
-impl Config {
-    pub const LEN: usize = core::mem::size_of::<Config>();
+impl Oracle {
+    pub const LEN: usize = core::mem::size_of::<Oracle>();
     pub fn from_bytes(data: &[u8]) -> Result<&Self, ProgramError> {
         if data.len() != Self::LEN {
             return Err(ProgramError::InvalidAccountData);
@@ -28,7 +28,7 @@ impl Config {
         Ok(unsafe { &mut *(data.as_mut_ptr() as *mut Self) })
     }
     pub fn set_inner(&mut self, other: Self) {
-        self.magic = other.magic;
+        self.problem = other.problem;
         self.tag = other.tag;
         self.chime_count = other.chime_count;
         self.genesis_seed = other.genesis_seed;
@@ -40,8 +40,8 @@ impl Config {
 
 #[repr(C)]
 #[derive(Clone, Copy)]
-pub struct Record {
-    pub magic: [u8; 6],
+pub struct Progress {
+    pub problem: [u8; 6],
     pub tag: u8,
     pub wallet: [u8; 32],
     pub arrival_slot: [u8; 8],
@@ -49,8 +49,8 @@ pub struct Record {
     pub solved: u8,
     pub solved_slot: [u8; 8],
 }
-impl Record {
-    pub const LEN: usize = core::mem::size_of::<Record>();
+impl Progress {
+    pub const LEN: usize = core::mem::size_of::<Progress>();
     pub fn from_bytes(data: &[u8]) -> Result<&Self, ProgramError> {
         if data.len() != Self::LEN {
             return Err(ProgramError::InvalidAccountData);
@@ -64,7 +64,7 @@ impl Record {
         Ok(unsafe { &mut *(data.as_mut_ptr() as *mut Self) })
     }
     pub fn set_inner(&mut self, other: Self) {
-        self.magic = other.magic;
+        self.problem = other.problem;
         self.tag = other.tag;
         self.wallet = other.wallet;
         self.arrival_slot = other.arrival_slot;

@@ -1,13 +1,17 @@
 #![no_std]
 
 pub mod constant;
-pub mod helpers;
 pub mod instructions;
+pub mod proof;
 pub mod state;
+#[cfg(test)]
+pub mod tests;
+#[cfg(test)]
+extern crate std;
 
 pub use constant::*;
-pub use helpers::*;
 pub use instructions::*;
+pub use proof::*;
 pub use state::*;
 
 use pinocchio::{
@@ -24,11 +28,9 @@ pub fn process_instruction(
 ) -> ProgramResult {
     match data.split_first() {
         Some((Initialize::DISCRIMINATOR, data)) => {
-            Clear::try_from((program_id, accounts, data))?.handle()
+            Initialize::try_from((program_id, accounts, data))?.handle()
         }
-        Some((Wake::DISCRIMINATOR, data)) => {
-            Clear::try_from((program_id, accounts, data))?.handle()
-        }
+        Some((Wake::DISCRIMINATOR, data)) => Wake::try_from((program_id, accounts, data))?.handle(),
         Some((Clear::DISCRIMINATOR, data)) => {
             Clear::try_from((program_id, accounts, data))?.handle()
         }

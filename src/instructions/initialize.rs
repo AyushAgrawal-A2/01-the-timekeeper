@@ -7,18 +7,18 @@ use pinocchio::{
 use pinocchio_system::create_account_with_minimum_balance_signed;
 
 use crate::{
-    Config, CHIME_COUNT, COMMITMENT, CONFIG_SEED, GENESIS_SEED, MAGIC, MESSAGE, TAG_CONFIG,
+    Oracle, CHIME_COUNT, COMMITMENT, GENESIS_SEED, MESSAGE, ORACLE_SEED, ORACLE_TAG, PROBLEM,
 };
 
 pub struct InitializeAccount<'a> {
-    config: &'a mut AccountView,
+    oracle: &'a mut AccountView,
 }
 impl<'a> TryFrom<(&Address, &'a mut [AccountView])> for InitializeAccount<'a> {
     type Error = ProgramError;
     fn try_from(
         (program_id, accounts): (&Address, &'a mut [AccountView]),
     ) -> Result<Self, Self::Error> {
-        let [payer, config, _system, ..] = accounts else {
+        let [payer, oracle, _system, ..] = accounts else {
             return Err(ProgramError::NotEnoughAccountKeys);
         };
 
@@ -26,26 +26,26 @@ impl<'a> TryFrom<(&Address, &'a mut [AccountView])> for InitializeAccount<'a> {
             return Err(ProgramError::MissingRequiredSignature);
         }
 
-        let (config_expected, config_bump) =
-            Address::derive_program_address(&[CONFIG_SEED], program_id)
+        let (oracle_expected, oracle_bump) =
+            Address::derive_program_address(&[ORACLE_SEED], program_id)
                 .ok_or(ProgramError::InvalidSeeds)?;
-        if *config.address() != config_expected {
+        if *oracle.address() != oracle_expected {
             return Err(ProgramError::InvalidSeeds);
         }
 
-        let config_bump = [config_bump];
-        let seeds = [Seed::from(CONFIG_SEED), Seed::from(&config_bump)];
+        let oracle_bump = [oracle_bump];
+        let seeds = [Seed::from(ORACLE_SEED), Seed::from(&oracle_bump)];
         let signers = [Signer::from(&seeds)];
         create_account_with_minimum_balance_signed(
-            config,
-            Config::LEN,
+            oracle,
+            Oracle::LEN,
             program_id,
             payer,
             None,
             &signers,
         )?;
 
-        Ok(Self { config })
+        Ok(Self { oracle })
     }
 }
 
@@ -57,18 +57,19 @@ impl<'a> TryFrom<(&'a Address, &'a mut [AccountView], &'a [u8])> for Initialize<
     fn try_from(
         (program_id, accounts, _data): (&'a Address, &'a mut [AccountView], &'a [u8]),
     ) -> Result<Self, Self::Error> {
-        let accounts = InitializeAccount::try_from((program_id, accounts))?;
-        Ok(Self { accounts })
+        Ok(Self {
+            accounts: InitializeAccount::try_from((program_id, accounts))?,
+        })
     }
 }
 impl<'a> Initialize<'a> {
     pub const DISCRIMINATOR: &'a u8 = &0u8;
     pub fn handle(&mut self) -> ProgramResult {
-        let mut config_mut_ptr = self.accounts.config.try_borrow_mut()?;
-        let config_data = Config::from_bytes_mut(config_mut_ptr.as_mut())?;
-        config_data.set_inner(Config {
-            magic: MAGIC,
-            tag: TAG_CONFIG,
+        let mut oracle_mut_ptr = self.accounts.oracle.try_borrow_mut()?;
+        let oracle_data = Oracle::from_bytes_mut(oracle_mut_ptr.as_mut())?;
+        oracle_data.set_inner(Oracle {
+            problem: PROBLEM,
+            tag: ORACLE_TAG,
             chime_count: CHIME_COUNT,
             genesis_seed: GENESIS_SEED,
             commitment: COMMITMENT,
