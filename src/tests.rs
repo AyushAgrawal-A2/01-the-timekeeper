@@ -213,6 +213,18 @@ mod test {
             });
         let oracle_data = include_bytes!("../artifacts/oracle.bin");
 
+        let mut progress_data = [0u8; Progress::LEN];
+        Progress::from_bytes_mut(&mut progress_data)
+            .unwrap()
+            .set_inner(Progress {
+                problem: PROBLEM,
+                tag: PROGRESS_TAG,
+                wallet: payer.to_bytes(),
+                arrival_slot: arrival_slot.to_le_bytes(),
+                attempts: 0u32.to_le_bytes(),
+                solved: 0,
+                solved_slot: [0u8; 8],
+            });
         let mut mollusk_local = Mollusk::new(&program_id, Target::Local.path());
         mollusk_local.warp_to_slot(solve_slot);
 
@@ -321,6 +333,18 @@ mod test {
             &progress_data
         );
 
+        let mut progress_data = [0u8; Progress::LEN];
+        Progress::from_bytes_mut(&mut progress_data)
+            .unwrap()
+            .set_inner(Progress {
+                problem: PROBLEM,
+                tag: PROGRESS_TAG,
+                wallet: payer.to_bytes(),
+                arrival_slot: arrival_slot.to_le_bytes(),
+                attempts: 0u32.to_le_bytes(),
+                solved: 0,
+                solved_slot: [0u8; 8],
+            });
         let mut mollusk_devnet = Mollusk::new(&program_id, Target::Devnet.path());
         mollusk_devnet.warp_to_slot(solve_slot);
 
