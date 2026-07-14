@@ -1,0 +1,17 @@
+[package]
+name = "timekeeper-verify"
+version = "0.1.0"
+edition = "2021"
+
+[[bin]]
+name = "verify"
+path = "src/main.rs"
+
+[dependencies]
+anchor-lang = "1.1.2"
+litesvm = "0.14"
+solana-transaction = { version = "4.1", features = ["wincode"] }
+solana-signer = "3.0.0"
+solana-keypair = "3.0.1"
+sha2 = "0.11"
+solana-account = "4.3.1"
