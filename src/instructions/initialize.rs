@@ -67,7 +67,7 @@ impl<'a> Initialize<'a> {
     pub fn handle(&mut self) -> ProgramResult {
         let mut oracle_mut_ptr = self.accounts.oracle.try_borrow_mut()?;
         let oracle_data = Oracle::from_bytes_mut(oracle_mut_ptr.as_mut())?;
-        oracle_data.set_inner(&Oracle {
+        oracle_data.set_inner(Oracle {
             problem: PROBLEM,
             tag: ORACLE_TAG,
             chime_count: CHIME_COUNT,

@@ -162,7 +162,7 @@ mod test {
         let mut expected_progress_data = [0u8; Progress::LEN];
         Progress::from_bytes_mut(&mut expected_progress_data)
             .unwrap()
-            .set_inner(&Progress {
+            .set_inner(Progress {
                 problem: PROBLEM,
                 tag: PROGRESS_TAG,
                 wallet: payer.to_bytes(),
@@ -202,7 +202,7 @@ mod test {
         let mut progress_data = [0u8; Progress::LEN];
         Progress::from_bytes_mut(&mut progress_data)
             .unwrap()
-            .set_inner(&Progress {
+            .set_inner(Progress {
                 problem: PROBLEM,
                 tag: PROGRESS_TAG,
                 wallet: payer.to_bytes(),
@@ -216,7 +216,7 @@ mod test {
         let mut progress_data = [0u8; Progress::LEN];
         Progress::from_bytes_mut(&mut progress_data)
             .unwrap()
-            .set_inner(&Progress {
+            .set_inner(Progress {
                 problem: PROBLEM,
                 tag: PROGRESS_TAG,
                 wallet: payer.to_bytes(),
@@ -336,7 +336,7 @@ mod test {
         let mut progress_data = [0u8; Progress::LEN];
         Progress::from_bytes_mut(&mut progress_data)
             .unwrap()
-            .set_inner(&Progress {
+            .set_inner(Progress {
                 problem: PROBLEM,
                 tag: PROGRESS_TAG,
                 wallet: payer.to_bytes(),

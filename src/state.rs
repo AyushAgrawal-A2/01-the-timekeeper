@@ -3,7 +3,6 @@ use pinocchio::{error::ProgramError, ProgramResult};
 use crate::MESSAGE;
 
 #[repr(C)]
-#[derive(Clone, Copy)]
 pub struct Oracle {
     pub problem: [u8; 6],
     pub tag: u8,
@@ -27,13 +26,12 @@ impl Oracle {
         }
         Ok(unsafe { &mut *(data.as_mut_ptr() as *mut Self) })
     }
-    pub fn set_inner(&mut self, other: &Self) {
-        *self = *other;
+    pub fn set_inner(&mut self, other: Self) {
+        *self = other;
     }
 }
 
 #[repr(C)]
-#[derive(Clone, Copy)]
 pub struct Progress {
     pub problem: [u8; 6],
     pub tag: u8,
@@ -57,8 +55,8 @@ impl Progress {
         }
         Ok(unsafe { &mut *(data.as_mut_ptr() as *mut Self) })
     }
-    pub fn set_inner(&mut self, other: &Self) {
-        *self = *other;
+    pub fn set_inner(&mut self, other: Self) {
+        *self = other;
     }
     fn get_attempts(&self) -> u32 {
         u32::from_le_bytes(self.attempts)
