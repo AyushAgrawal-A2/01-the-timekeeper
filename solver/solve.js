@@ -103,7 +103,6 @@ async function main() {
       { pubkey: me.publicKey, isSigner: true, isWritable: true },
       { pubkey: record, isSigner: false, isWritable: true },
       { pubkey: config, isSigner: false, isWritable: false },
-      { pubkey: SystemProgram.programId, isSigner: false, isWritable: false },
     ],
     data: Buffer.concat([Buffer.from([0x02]), proof]),
   });
