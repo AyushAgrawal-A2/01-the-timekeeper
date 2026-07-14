@@ -27,14 +27,8 @@ impl Oracle {
         }
         Ok(unsafe { &mut *(data.as_mut_ptr() as *mut Self) })
     }
-    pub fn set_inner(&mut self, other: Self) {
-        self.problem = other.problem;
-        self.tag = other.tag;
-        self.chime_count = other.chime_count;
-        self.genesis_seed = other.genesis_seed;
-        self.commitment = other.commitment;
-        self.genesis_slot = other.genesis_slot;
-        self.message = other.message;
+    pub fn set_inner(&mut self, other: &Self) {
+        *self = *other;
     }
 }
 
@@ -63,14 +57,8 @@ impl Progress {
         }
         Ok(unsafe { &mut *(data.as_mut_ptr() as *mut Self) })
     }
-    pub fn set_inner(&mut self, other: Self) {
-        self.problem = other.problem;
-        self.tag = other.tag;
-        self.wallet = other.wallet;
-        self.arrival_slot = other.arrival_slot;
-        self.attempts = other.attempts;
-        self.solved = other.solved;
-        self.solved_slot = other.solved_slot;
+    pub fn set_inner(&mut self, other: &Self) {
+        *self = *other;
     }
     fn get_attempts(&self) -> u32 {
         u32::from_le_bytes(self.attempts)

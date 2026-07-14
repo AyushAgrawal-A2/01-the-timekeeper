@@ -74,7 +74,7 @@ impl<'a> Wake<'a> {
     pub fn handle(&mut self) -> ProgramResult {
         let mut progress_mut_ptr = self.accounts.progress.try_borrow_mut()?;
         let progress_data = Progress::from_bytes_mut(progress_mut_ptr.as_mut())?;
-        progress_data.set_inner(Progress {
+        progress_data.set_inner(&Progress {
             problem: PROBLEM,
             tag: PROGRESS_TAG,
             wallet: self.accounts.payer.address().to_bytes(),
