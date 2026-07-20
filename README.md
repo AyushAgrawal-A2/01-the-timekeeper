@@ -2,6 +2,8 @@
 
 Solana Summit India challenge `c1`.
 
+![Challenge](01-the-timekeeper.png)
+
 ## Key addresses
 
 | Name | Value |
